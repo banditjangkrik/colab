@@ -7,15 +7,30 @@ jobs:
   build:
     name: Start Building...
     runs-on: windows-latest
-    timeout-minutes: 9999
+    timeout-minutes: 360  # Adjust to a reasonable duration
     
     steps:
       - name: Downloading & Installing Essentials
         run: |
-          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/banditjangkrik/colab/refs/heads/main/Download.bat" -OutFile "Downloads.bat"
-          cmd /c Downloads.bat
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/banditjangkrik/colab/refs/heads/main/Download.bat" -OutFile "Download.bat"
+          if (Test-Path -Path "Download.bat") {
+            cmd /c Download.bat
+          } else {
+            Write-Error "Download failed or file not found."
+          }
+          
       - name: Connect to LiteManager
-        run: cmd /c show.bat
+        run: |
+          if (Test-Path -Path "show.bat") {
+            cmd /c show.bat
+          } else {
+            Write-Error "show.bat not found."
+          }
 
       - name: Time Counter
-        run: cmd /c loop.bat
+        run: |
+          if (Test-Path -Path "loop.bat") {
+            cmd /c loop.bat
+          } else {
+            Write-Error "loop.bat not found."
+          }
